@@ -3,7 +3,7 @@
 PROJECT=$1
 REGION=${2:-"us-central1"}
 CLUSTER_NAME=${3:-"log680-gcp-cluster"}
-SERVICE_ACCOUNT_NAME=${4:-"kubernetes-engine-developer"}
+# SERVICE_ACCOUNT_NAME=${4:-"kubernetes-engine-developer"}
 
 
 if [[ -z $PROJECT ]]; then
@@ -12,25 +12,25 @@ if [[ -z $PROJECT ]]; then
 fi
 
 
-gcloud iam service-accounts create $SERVICE_ACCOUNT_NAME \
-    --display-name="GKE Developer Service Account"
+# gcloud iam service-accounts create $SERVICE_ACCOUNT_NAME \
+#     --display-name="GKE Developer Service Account"
 
 
-SERVICE_ACCOUNT_NAME="${SERVICE_ACCOUNT_NAME}@${PROJECT}.iam.gserviceaccount.com"
+# SERVICE_ACCOUNT_NAME="${SERVICE_ACCOUNT_NAME}@${PROJECT}.iam.gserviceaccount.com"
 
 
-for ROLE in \
-  roles/cloudsql.admin \
-  roles/iam.serviceAccountCreator \
-  roles/container.developer \
-  roles/container.serviceAgent \
-  roles/iam.serviceAccountAdmin \
-  roles/iam.serviceAccountKeyAdmin
-do
-  gcloud projects add-iam-policy-binding $PROJECT \
-    --member="serviceAccount:${SERVICE_ACCOUNT_NAME}" \
-    --role="$ROLE"
-done
+# for ROLE in \
+#   roles/cloudsql.admin \
+#   roles/iam.serviceAccountCreator \
+#   roles/container.developer \
+#   roles/container.serviceAgent \
+#   roles/iam.serviceAccountAdmin \
+#   roles/iam.serviceAccountKeyAdmin
+# do
+#   gcloud projects add-iam-policy-binding $PROJECT \
+#     --member="serviceAccount:${SERVICE_ACCOUNT_NAME}" \
+#     --role="$ROLE"
+# done
 
 
 gcloud beta container \
@@ -53,8 +53,8 @@ gcloud beta container \
         "14GB" \
     --metadata \
     disable-legacy-endpoints=true \
-    --service-account \
-        "${SERVICE_ACCOUNT_NAME}" \
+    # --service-account \
+    #     "${SERVICE_ACCOUNT_NAME}" \
     --max-pods-per-node \
         "20" \
     --num-nodes \

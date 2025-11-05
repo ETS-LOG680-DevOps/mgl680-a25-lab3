@@ -76,14 +76,14 @@ Installez les outils suivants :
 
 Exécutez le script suivant :
 ```bash
-sh ./create_k8s.sh [PROJECT] [REGION] [SERVICE_ACCOUNT_NAME]
+sh ./create_k8s.sh [PROJECT] [REGION] [CLUSTER_NAME]
 ```
 
 **Paramètres :**
 - `PROJECT` : ID du projet (**obligatoire**)  
 - `REGION` : région où le cluster sera créé (**optionnel**, défaut : `us-central1`)  
 - `CLUSTER_NAME` : nom du cluster (**optionnel**, défaut : `log680-gcp-cluster`)  
-- `SERVICE_ACCOUNT_NAME` : nom du compte de service associé au cluster (**optionnel**, défaut : `kubernetes-engine-developer`)
+<!-- - `SERVICE_ACCOUNT_NAME` : nom du compte de service associé au cluster (**optionnel**, défaut : `kubernetes-engine-developer`) -->
 
 ---
 
@@ -102,7 +102,15 @@ Votre fichier **kubeconfig** se trouve par défaut :
 
 ---
 
-## Configuration de Cloud SQL (PostgreSQL)
+### 8. Création du namespace Kubernetes
+
+Créez le **namespace** de votre équipe en suivant les instructions du dépôt suivant :  
+👉 [k8s-config-generator](https://github.com/aliarabat/k8s-config-generator).
+Vous devez utiliser un fichier nommé `kubeconfig.b64`, qui vous permettra de gérer les ressources de votre namespace dans le cluster Kubernetes. Vous pouvez le stocker dans un secret GitHub Actions.
+
+---
+
+### 9. Configuration de Cloud SQL (PostgreSQL)
 
 Créez et configurez une instance PostgreSQL sur Cloud SQL à l’aide du script suivant :
 ```bash
@@ -118,23 +126,14 @@ sh ./create_cloudsql.sh [PROJECT] [REGION] [INSTANCE_NAME] [USER_DB] [PASSWORD]
 
 ---
 
-## Étapes supplémentaires
-
-### 1. Création du namespace Kubernetes
-
-Créez le **namespace** de votre équipe en suivant les instructions du dépôt suivant :  
-👉 [k8s-config-generator](https://github.com/aliarabat/k8s-config-generator)
-
----
-
-### 2. Création de la base de données et des utilisateurs
+### 10. Création de la base de données et des utilisateurs
 
 Créez la base de données, le nom d’utilisateur et le mot de passe nécessaires pour vos applications (`metrics-api` et `MobilitySoft`) en suivant les instructions du dépôt :  
 👉 [postgresql-db-generator](https://github.com/aliarabat/postgresql-db-generator)
 
 ---
 
-### 3. Sauvegarde des informations de connexion
+### 11. Sauvegarde des informations de connexion
 
 Sauvegardez les identifiants de connexion à votre base de données dans un **secret Kubernetes** :
 
@@ -143,10 +142,30 @@ kubectl create secret generic db-credentials \
     --from-literal=POSTGRES_HOST=[Adresse privée de votre instance PostgreSQL] \
     --from-literal=POSTGRES_DB=[Nom de votre base de données] \
     --from-literal=POSTGRES_USER=[Nom d’utilisateur] \
-    --from-literal=POSTGRES_PASSWORD=[Mot de passe]
+    --from-literal=POSTGRES_PASSWORD=[Mot de passe] \
         -n [Nom de votre namespace Kubernetes] \
     --dry-run=client -o yaml | kubectl apply -f -
 ```
+
+Le `NAMESPACE` peut être retrouvé à l’emplacement suivant : `k8s-config-generator/out/VotreGroupe/namespace.yaml`.
+
+---
+
+### Notes supplémentaires
+
+- **Gestion du trafic externe**  
+  Pour que vos applications puissent traiter le trafic provenant de l’extérieur, leurs `root_path` doivent commencer par le chemin spécifié dans le fichier *Ingress*. Par exemple, si l’Ingress de votre application `metrics-api` est exposé via `/team1/metrics-api`, alors le `root_path` de votre application doit commencer par ce segment :  
+  ```python
+  FastAPI(root_path="/team1/metrics-api")
+  ```
+
+- **Connexion à la base de données**  
+  La connexion à la base de données se fait à l’aide d’une adresse IP **privée**, et non publique, puisque toutes les ressources sont hébergées dans le même réseau.
+
+- **Utilisation des crédits Google Cloud**  
+  Nous vous encourageons à utiliser judicieusement les crédits que Google vous a accordés.  
+  Pour en tirer le meilleur parti, pensez à **supprimer le cluster Kubernetes et d'arrêter l’instance Cloud SQL** lorsque vous n’en avez pas besoin, afin de réduire vos coûts.  
+  En pratique, il est souvent plus simple de supprimer le cluster Kubernetes (en utilisant `delete_k8s.sh`) et d’arrêter l’instance Cloud SQL (via l'interface graphique [GCP](https://console.cloud.google.com/sql/instances)), tout en conservant vos données dans la base de données, que vous pourrez réutiliser lors de la prochaine création de l’instance. N’hésitez pas à stocker les informations de connexion de votre base de données dans un secret après la recréation du cluster.
 
 ---
 
