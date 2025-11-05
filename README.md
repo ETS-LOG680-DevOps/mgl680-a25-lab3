@@ -161,7 +161,7 @@ Le `NAMESPACE` peut être retrouvé à l’emplacement suivant : `k8s-config-gen
 - **Connexion à la base de données :** La connexion à la base de données se fait à l’aide d’une adresse IP **privée**, et non publique, puisque toutes les ressources sont hébergées dans le même réseau.
 
 - **Utilisation des crédits Google Cloud :** Nous vous encourageons à utiliser judicieusement les crédits que Google vous a accordés. Pour en tirer le meilleur parti, pensez à **supprimer le cluster Kubernetes et d'arrêter l’instance Cloud SQL** lorsque vous n’en avez pas besoin, afin de réduire vos coûts.
-En pratique, il est souvent plus simple de supprimer le cluster Kubernetes (en utilisant `delete_k8s.sh`) et d’arrêter l’instance Cloud SQL (via l'interface graphique [GCP](https://console.cloud.google.com/sql/instances)), tout en conservant vos données dans la base de données, que vous pourrez réutiliser lors de la prochaine création de l’instance. N’hésitez pas à stocker les informations de connexion de votre base de données dans un secret après la recréation du cluster.
+En pratique, il est souvent plus simple de supprimer le cluster Kubernetes (en utilisant `delete_k8s.sh`) et d’arrêter l’instance Cloud SQL (via l'interface graphique [GCP](https://console.cloud.google.com/sql/instances)), tout en conservant vos données dans la base de données, que vous pourrez réutiliser lors de la prochaine création de l’instance. Il faut éviter de supprimer l’instance Cloud SQL en utilisant le script `delete_cloudsql.sh`, car cela entraînerait la suppression définitive de vos données. N’hésitez pas à stocker les informations de connexion de votre base de données dans un secret après la recréation du cluster Kubernetes.
 
 ---
 
