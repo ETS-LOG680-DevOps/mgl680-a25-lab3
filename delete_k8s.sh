@@ -13,6 +13,6 @@ fi
 
 gcloud container clusters delete $CLUSTER_NAME --region $REGION-a
 
-SERVICE_ACCOUNT="${SERVICE_ACCOUNT_NAME}@${PROJECT}.iam.gserviceaccount.com"
+# SERVICE_ACCOUNT="${SERVICE_ACCOUNT_NAME}@${PROJECT}.iam.gserviceaccount.com"
 
-gcloud iam service-accounts delete $SERVICE_ACCOUNT
+# gcloud iam service-accounts delete $SERVICE_ACCOUNT
