@@ -2,7 +2,7 @@
 
 ## Création du compte
 
-1. Chaque membre de l’équipe doit demander un **coupon** pour bénéficier d’un crédit de **50 USD** en remplissant le formulaire suivant : [Lien](https://vector.my.salesforce-sites.com/GCPEDU?cid=RUfENThK1siA59ihpXrLq8YOgfYNGhMPEmF5lOBQfmsUzqp7SYS1NfEp7b0z%2F1Ue/).  
+1. Chaque membre de l’équipe doit demander un **coupon** pour bénéficier d’un crédit de **50 USD** en remplissant le formulaire envoyé dans le canal General sur Discord.  
    L’équipe disposera ainsi d’un **crédit total de 150 USD**.
 
 2. Vérifiez votre compte en cliquant sur le lien de confirmation envoyé dans le deuxième courriel.  
@@ -104,9 +104,9 @@ Votre fichier **kubeconfig** se trouve par défaut :
 
 ### 8. Création du namespace Kubernetes
 
-Créez le **namespace** de votre équipe en suivant les instructions du dépôt suivant :  
-👉 [k8s-config-generator](https://github.com/aliarabat/k8s-config-generator).
-Vous devez utiliser un fichier nommé `kubeconfig.b64`, qui vous permettra de gérer les ressources de votre namespace dans le cluster Kubernetes. Vous pouvez le stocker dans un secret GitHub Actions.
+Créez le **namespace** de votre équipe en suivant les instructions du dépôt suivant :  👉 [k8s-config-generator](https://github.com/aliarabat/k8s-config-generator).
+
+Vous devez utiliser un fichier nommé `kubeconfig.b64` (peut etre trouvé dans `k8s-config-generator/out/grp{n}eq{n}`), qui vous permettra de gérer les ressources de votre namespace dans le cluster Kubernetes. Vous pouvez le stocker dans un secret GitHub Actions.
 
 ---
 
@@ -122,14 +122,13 @@ sh ./create_cloudsql.sh [PROJECT] [REGION] [INSTANCE_NAME] [USER_DB] [PASSWORD]
 - `REGION` : région de création (**optionnel**, défaut : `us-central1`)  
 - `INSTANCE_NAME` : nom de l’instance PostgreSQL (**optionnel**, défaut : `my-postgres`)  
 - `USER_DB` : nom d’utilisateur de la base de données (**optionnel**, défaut : `log680user`)  
-- `PASSWORD` : mot de passe de l’utilisateur (**optionnel**, défaut : `log680user`)
+- `PASSWORD` : mot de passe de l’utilisateur (**optionnel**, défaut : `log680a2025`)
 
 ---
 
 ### 10. Création de la base de données et des utilisateurs
 
-Créez la base de données, le nom d’utilisateur et le mot de passe nécessaires pour vos applications (`metrics-api` et `MobilitySoft`) en suivant les instructions du dépôt :  
-👉 [postgresql-db-generator](https://github.com/aliarabat/postgresql-db-generator)
+Créez la base de données, le nom d’utilisateur et le mot de passe nécessaires pour vos applications (`metrics-api` et `MobilitySoft`) en suivant les instructions du dépôt : 👉 [postgresql-db-generator](https://github.com/aliarabat/postgresql-db-generator)
 
 ---
 
@@ -161,7 +160,7 @@ Le `NAMESPACE` peut être retrouvé à l’emplacement suivant : `k8s-config-gen
 - **Connexion à la base de données :** La connexion à la base de données se fait à l’aide d’une adresse IP **privée**, et non publique, puisque toutes les ressources sont hébergées dans le même réseau.
 
 - **Utilisation des crédits Google Cloud :** Nous vous encourageons à utiliser judicieusement les crédits que Google vous a accordés. Pour en tirer le meilleur parti, pensez à **supprimer le cluster Kubernetes et d'arrêter l’instance Cloud SQL** lorsque vous n’en avez pas besoin, afin de réduire vos coûts.
-En pratique, il est souvent plus simple de supprimer le cluster Kubernetes (en utilisant `delete_k8s.sh`) et d’arrêter l’instance Cloud SQL (via l'interface graphique [GCP](https://console.cloud.google.com/sql/instances)), tout en conservant vos données dans la base de données, que vous pourrez réutiliser lors de la prochaine création de l’instance. Il faut éviter de supprimer l’instance Cloud SQL en utilisant le script `delete_cloudsql.sh`, car cela entraînerait la suppression définitive de vos données. N’hésitez pas à stocker les informations de connexion de votre base de données dans un secret après la recréation du cluster Kubernetes.
+En pratique, il est souvent plus simple de supprimer le cluster Kubernetes (en utilisant `delete_k8s.sh`) et d’arrêter l’instance Cloud SQL (via l'interface graphique [GCP](https://console.cloud.google.com/sql/instances)), tout en conservant vos données dans la base de données, que vous pourrez réutiliser lors de la prochaine restauration de l’instance. Il faut éviter de supprimer l’instance Cloud SQL en utilisant le script `delete_cloudsql.sh`, car cela entraînerait la suppression définitive de vos données. N’hésitez pas à stocker les informations de connexion de votre base de données dans un secret après la recréation du cluster Kubernetes.
 
 ---
 
