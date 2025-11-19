@@ -12,7 +12,7 @@ gcloud config set project $PROJECT
 
 gcloud compute addresses delete google-managed-services-default --global
 
-kubectl delete secret generic postgres-instance-ip-secret
+# kubectl delete secret generic postgres-instance-ip-secret
 
 # Create PostgreSQL instance
 gcloud sql instances delete $INSTANCE_NAME
